@@ -153,14 +153,12 @@
 '''
 
 
-
-
-
-
-
-# code
-
+# Initialising pygame
 import pygame
+pygame.init()
+
+# other imports
+from sound_maker import Note
 import random
 import time
 
@@ -169,8 +167,9 @@ pygame.init()
 
 # Settings
 
+refresh_rate = 144  # set to the refresh rate of your monitor
 list_size = 100  # amount of items in the list  if blocks don't show up you have added too many
-delay = 0  # slow down algorithms if you want (delay is in milliseconds)
+delay = 5  # slow down algorithms if you want (delay is in milliseconds)
 
 use_random_numbers_in_list = False    # if false you will have numbers 1 -> len(lst) elif true you will have x random numbers in range(min_v, max_v) where x is list length
 
@@ -272,12 +271,15 @@ def draw_lst(drawinfo, index, sorting, end, custom_colour=None):
         if end:
             if i <= index:
                 colour = drawinfo.end_colour  # make block colour end colour
+                if i == index:
+                    Note(y).play(-1, maxtime=delay)
             else:
                 colour = drawinfo.block_colour  # make block colour normal colour
 
         else:
             if i == index and sorting:    # and sorting because otherwise index 0 would stay red
                 colour = custom_colour
+                Note(y).play(-1, maxtime=delay)  # note frequency if the height of the block
             else:
                 colour = drawinfo.block_colour
 
@@ -321,9 +323,6 @@ def bubble_sort(ascending, index, lst):
         if (lst[index] < lst[index - 1] and ascending) or (lst[index] > lst[index - 1] and not ascending):
             lst[index - 1], lst[index] = lst[index], lst[index - 1]
 
-    if delay > 0:
-        time.sleep(delay / 1000)
-
     return lst
 
 
@@ -340,9 +339,6 @@ def insertion_sort(ascending, index, insertion_index, lst):
         else:
             index += 1
             insertion_index = index
-
-    if delay > 0:
-        time.sleep(delay / 1000)
 
     return lst, index, insertion_index
 
@@ -552,9 +548,12 @@ def main():
     generator = None  # I coded selection sort using a generator because it is simpler to use a generator than to have index variables but I am too lazy to recode bubble and insertion to use a generator
 
     while run:
-        clock.tick(144)
+        clock.tick(refresh_rate)
+        if delay > 0 and (sorting or end):
+            time.sleep(delay / 1000)
 
         if sorting:
+
             if bubble:
                 if loop_count < len(lst) and index < len(lst) and lst != pre_sorted:
                     lst = bubble_sort(ascending, index, lst)
@@ -586,8 +585,6 @@ def main():
                     end = True
 
             if selection or merge or quick or cocktail:
-                if delay > 0:
-                    time.sleep(delay / 1000)
                 try:
                     next(generator)
                 except StopIteration:
@@ -602,6 +599,7 @@ def main():
             else:
                 index = 0
                 end = False
+
         else:
             if insertion:
                 draw(drawinfo, insertion_sort_index, sorting)
@@ -727,9 +725,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
