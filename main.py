@@ -1,3 +1,6 @@
+# sound effects on or off (I would recommend off as there is a buzzing noise when on)
+sound_effects_on = False
+
 '''
     HOW EACH SORTING ALGORITHM WORKS
     --------------------------------
@@ -271,7 +274,7 @@ def draw_lst(drawinfo, index, sorting, end, custom_colour=None):
         if end:
             if i <= index:
                 colour = drawinfo.end_colour  # make block colour end colour
-                if i == index:
+                if i == index and sound_effects_on:
                     Note(y).play(-1, maxtime=delay)
             else:
                 colour = drawinfo.block_colour  # make block colour normal colour
@@ -279,7 +282,8 @@ def draw_lst(drawinfo, index, sorting, end, custom_colour=None):
         else:
             if i == index and sorting:    # and sorting because otherwise index 0 would stay red
                 colour = custom_colour
-                Note(y).play(-1, maxtime=delay)  # note frequency if the height of the block
+                if sound_effects_on:
+                    Note(y).play(-1, maxtime=delay)  # note frequency if the height of the block
             else:
                 colour = drawinfo.block_colour
 
