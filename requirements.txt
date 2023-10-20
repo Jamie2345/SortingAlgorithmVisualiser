@@ -1,5 +1,1 @@
 pygame
-
-
-
-how to install pygame: https://www.geeksforgeeks.org/how-to-install-pygame-in-windows/
